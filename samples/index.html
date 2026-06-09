@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My App</title>
+    <style>
+        .container { width: 100%; padding: 20px; }
+        .button { background: blue; color: white; padding: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome</h1>
+        <form action="/login" method="GET">
+            <input type="text" name="username" id="username">
+            <input type="password" name="password" id="password">
+            <button class="button" onclick="login()">Login</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script>
+        function login() {
+            var user = document.getElementById('username').value;
+            var pass = document.getElementById('password').value;
+            // XSS vulnerability
+            document.getElementById('result').innerHTML = 'Hello ' + user;
+            
+            // Sending password in URL
+            fetch('/login?username=' + user + '&password=' + pass);
+        }
+        
+        function loadContent() {
+            var hash = window.location.hash.substring(1);
+            // DOM-based XSS
+            document.getElementById('result').innerHTML = hash;
+        }
+        
+        window.onload = loadContent;
+    </script>
+</body>
+</html>
